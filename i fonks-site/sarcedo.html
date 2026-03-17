@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FONKS | Sarcedo City Main Stage</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;900&display=swap" rel="stylesheet">
+    <style>
+        /* RESET E FIX GLOBALI PER SARCEDO */
+        .sarcedo-hero {
+            height: 60vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: radial-gradient(circle, rgba(204, 255, 0, 0.15) 0%, rgba(10, 10, 10, 1) 70%);
+            border-bottom: 2px solid #ccff00;
+        }
+
+        /* BOX PRENOTAZIONI RIFATTA DA ZERO - ANTI GLITCH */
+        .booking-section {
+            display: block !important; /* Forza il blocco */
+            max-width: 500px !important;
+            margin: 50px auto 100px !important;
+            padding: 40px !important;
+            background-color: #111 !important;
+            border: 2px solid #222 !important;
+            text-align: center !important;
+            box-sizing: border-box !important;
+        }
+
+        .booking-section h2 {
+            font-family: 'Anton', sans-serif;
+            color: #ccff00;
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+
+        /* FORZA L'INCOLONNAMENTO DELLE CASELLE */
+        .booking-form {
+            display: flex !important;
+            flex-direction: column !important; /* OBBLIGA AD ANDARE IN VERTICALE */
+            align-items: stretch !important;
+            gap: 15px !important;
+            width: 100% !important;
+        }
+
+        .booking-form input, 
+        .booking-form textarea {
+            display: block !important;
+            width: 100% !important;
+            padding: 15px !important;
+            background-color: #000 !important; /* Sfondo nero */
+            border: 1px solid #444 !important; /* Bordo grigio scuro */
+            color: #fff !important; /* Testo bianco */
+            font-family: 'Inter', sans-serif;
+            font-size: 16px;
+            box-sizing: border-box !important;
+            margin: 0 !important;
+        }
+
+        .booking-form input:focus, 
+        .booking-form textarea:focus {
+            border-color: #ccff00 !important;
+            outline: none;
+        }
+
+        /* IL PULSANTE - FIX POSIZIONAMENTO E HOVER */
+        .btn-submit {
+            display: block !important;
+            width: 100% !important;
+            padding: 20px !important;
+            background-color: #ccff00 !important;
+            color: #000 !important;
+            font-weight: 900 !important;
+            font-size: 18px !important;
+            text-transform: uppercase !important;
+            border: none !important;
+            cursor: pointer !important;
+            margin-top: 10px !important;
+            position: relative !important; /* Impedisce di finire "sotto" altri elementi */
+            z-index: 10 !important;
+            transition: transform 0.2s, box-shadow 0.2s !important;
+        }
+
+        .btn-submit:hover {
+            transform: scale(1.02) !important;
+            box-shadow: 0 0 20px rgba(204, 255, 0, 0.6) !important;
+            background-color: #e6ff80 !important;
+        }
+
+        .btn-submit:disabled {
+            background-color: #444 !important;
+            color: #888 !important;
+            cursor: not-allowed !important;
+        }
+
+        #messaggio-conferma {
+            margin-top: 20px;
+            color: #ccff00;
+            font-weight: bold;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="logo">FONKS</div>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="fonks_tournee.html">Tournée</a></li>
+            <li><a href="sarcedo.html" class="active">Sarcedo Special</a></li>
+        </ul>
+    </nav>
+
+    <header class="sarcedo-hero">
+        <div class="event-badge">THE FOONKS FINAL SHOW</div>
+        <h1 style="font-family: 'Anton';">SARCEDO CITY</h1>
+    </header>
+
+    <div class="booking-section">
+        <h2>PREVENDITE</h2>
+        <p style="margin-bottom: 20px; color: #aaa; text-transform: none;">Inserisci i tuoi dati per il Main Stage</p>
+        
+        <form id="sarcedo-form" class="booking-form">
+            <input type="text" name="Nome" placeholder="NOME / ORGANIZZAZIONE" required>
+            <input type="email" name="Email" placeholder="LA TUA EMAIL" required>
+            <textarea name="Messaggio" rows="4" placeholder="MESSAGGIO" required></textarea>
+            
+            <button type="submit" class="btn-submit" id="submit-btn">INVIA RICHIESTA</button>
+        </form>
+
+        <div id="messaggio-conferma"></div>
+    </div>
+
+    <footer>
+        <p>© 2026 FONKS — SARCEDO CITY IS THE PLACE TO FONKS!!! </p>
+    </footer>
+
+    <script>
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbwraKRJnvOZNVbFOWXk4Yynb0rx3Dx38EG1nDxAwPj53gKO_7es7Vq11sfRJtG-rMMiQA/exec';
+        const form = document.getElementById('sarcedo-form');
+        const msg = document.getElementById('messaggio-conferma');
+        const btn = document.getElementById('submit-btn');
+
+        form.addEventListener('submit', e => {
+            e.preventDefault();
+            btn.disabled = true;
+            btn.innerHTML = "INVIO IN CORSO...";
+            msg.style.display = 'block';
+            msg.innerHTML = "Sincronizzazione con il Main Stage...";
+
+            fetch(scriptURL, { 
+                method: 'POST', 
+                body: new FormData(form),
+                mode: 'no-cors'
+            })
+            .then(() => {
+                msg.innerHTML = "INVIATO! Ci vediamo sotto al palco di Sarcedo.";
+                btn.innerHTML = "RICHIESTA INVIATA";
+                form.reset();
+            })
+            .catch(error => {
+                msg.innerHTML = "ERRORE. Ricarica la pagina e riprova.";
+                btn.disabled = false;
+                btn.innerHTML = "RIPROVA";
+            });
+        });
+    </script>
+
+</body>
+</html>
